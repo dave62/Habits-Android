@@ -1,0 +1,8 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string-array name="periodicity_spinner">
+        <item>per day</item>
+        <item>per week</item>
+        <item>per month</item>
+    </string-array>
+</resources>
