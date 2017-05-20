@@ -1,9 +1,12 @@
 package com.github.dave62.habits.activity;
 
 import android.app.DatePickerDialog;
+import android.support.constraint.ConstraintLayout;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.view.View;
+import android.view.animation.TranslateAnimation;
+import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.DatePicker;
 import android.widget.EditText;
@@ -23,12 +26,17 @@ import java.util.Locale;
 public class CreateHabitActivity extends AppCompatActivity {
 
     private final static SimpleDateFormat DATE_FORMAT = new SimpleDateFormat("MM/dd/yy", Locale.US);
-
-    @ViewById
-    protected Spinner periodicitySpinner;
+    private final static int BASIC_POSITION = 0;
+    private final static int CUSTOM_POSITION = 1;
 
     @ViewById
     protected EditText startDateInput;
+    @ViewById
+    protected Spinner habitTypeSpinner;
+    @ViewById
+    protected ConstraintLayout howContainer;
+    @ViewById
+    protected Spinner periodicitySpinner;
 
     protected Calendar calendar = Calendar.getInstance();
 
@@ -40,15 +48,10 @@ public class CreateHabitActivity extends AppCompatActivity {
 
     @AfterViews
     protected void afterViews() {
-        addPeriodicitiesInSpinner();
+        howContainer.setVisibility(View.GONE);
         initializeDatePicker();
-    }
-
-    private void addPeriodicitiesInSpinner() {
-        ArrayAdapter<CharSequence> adapter = ArrayAdapter.createFromResource(this,
-                R.array.periodicity_spinner, android.R.layout.simple_spinner_item);
-        adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
-        periodicitySpinner.setAdapter(adapter);
+        initializeTypesSpinner();
+        initializePeriodicitiesSpinner();
     }
 
     private void initializeDatePicker() {
@@ -71,4 +74,54 @@ public class CreateHabitActivity extends AppCompatActivity {
             }
         });
     }
+
+    private void initializeTypesSpinner() {
+        ArrayAdapter<CharSequence> adapter = ArrayAdapter.createFromResource(this,
+                R.array.habit_type_spinner, android.R.layout.simple_spinner_item);
+        adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+        habitTypeSpinner.setAdapter(adapter);
+
+        habitTypeSpinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
+            @Override
+            public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
+                switch (position) {
+                    case BASIC_POSITION:
+                        hideHowContainer();
+                        break;
+                    case CUSTOM_POSITION:
+                        showHowContainer();
+                        break;
+                    default:
+                        break;
+                }
+            }
+            @Override
+            public void onNothingSelected(AdapterView<?> parent) {
+                //Nothing to do
+            }
+        });
+    }
+
+    private void hideHowContainer() {
+        if (howContainer.isShown()) {
+            howContainer.setVisibility(View.GONE);
+        }
+    }
+
+    private void showHowContainer() {
+        if (!howContainer.isShown()) {
+            howContainer.setVisibility(View.VISIBLE);
+        }
+    }
+
+    private void initializePeriodicitiesSpinner() {
+        ArrayAdapter<CharSequence> adapter = ArrayAdapter.createFromResource(this,
+                R.array.periodicity_spinner, android.R.layout.simple_spinner_item);
+        adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+        periodicitySpinner.setAdapter(adapter);
+    }
+
+
+
+
 }
