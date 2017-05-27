@@ -1,11 +1,11 @@
 package com.github.dave62.habits.activity;
 
 import android.app.DatePickerDialog;
+import android.os.Bundle;
 import android.support.constraint.ConstraintLayout;
 import android.support.v7.app.AppCompatActivity;
-import android.os.Bundle;
+import android.text.TextUtils;
 import android.view.View;
-import android.view.animation.TranslateAnimation;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.DatePicker;
@@ -13,8 +13,12 @@ import android.widget.EditText;
 import android.widget.Spinner;
 
 import com.github.dave62.habits.R;
+import com.github.dave62.habits.model.Habit;
+import com.github.dave62.habits.model.HabitPeriodicity;
+import com.github.dave62.habits.model.HabitType;
 
 import org.androidannotations.annotations.AfterViews;
+import org.androidannotations.annotations.Click;
 import org.androidannotations.annotations.EActivity;
 import org.androidannotations.annotations.ViewById;
 
@@ -25,10 +29,14 @@ import java.util.Locale;
 @EActivity(R.layout.activity_create_habit)
 public class CreateHabitActivity extends AppCompatActivity {
 
+    //TODO : Think about internationalization
     private final static SimpleDateFormat DATE_FORMAT = new SimpleDateFormat("MM/dd/yy", Locale.US);
+    //TODO : Find a way to link enum and spinner (HabitType and HabitPeriodicity)
     private final static int BASIC_POSITION = 0;
     private final static int CUSTOM_POSITION = 1;
 
+    @ViewById
+    protected EditText nameInput;
     @ViewById
     protected EditText startDateInput;
     @ViewById
@@ -36,7 +44,10 @@ public class CreateHabitActivity extends AppCompatActivity {
     @ViewById
     protected ConstraintLayout howContainer;
     @ViewById
+    protected EditText repetitionInput;
+    @ViewById
     protected Spinner periodicitySpinner;
+
 
     protected Calendar calendar = Calendar.getInstance();
 
@@ -121,7 +132,47 @@ public class CreateHabitActivity extends AppCompatActivity {
         periodicitySpinner.setAdapter(adapter);
     }
 
+    @Click(R.id.saveBtn)
+    protected void saveHabit() {
+        if (isFormValid()) {
+            Habit habit = new Habit();
+            habit.setName(nameInput.getText().toString().trim());
+            habit.setStartingDate(calendar.getTime());
+            if (habitTypeSpinner.getSelectedItemId() == BASIC_POSITION) {
+                habit.setType(HabitType.BASIC);
+                habit.setGoalPerPeriod(1);
+                habit.setPeriodicity(HabitPeriodicity.DAILY);
+            } else if (habitTypeSpinner.getSelectedItemId() == CUSTOM_POSITION) {
+                habit.setType(HabitType.CUSTOM);
+                habit.setGoalPerPeriod(Integer.parseInt(repetitionInput.getText().toString().trim()));
+                if (periodicitySpinner.getSelectedItemId() == 0) {
+                    habit.setPeriodicity(HabitPeriodicity.WEEKLY);
+                } else if (periodicitySpinner.getSelectedItemId() == 1) {
+                    habit.setPeriodicity(HabitPeriodicity.MONTHLY);
+                }
+            }
+            //TODO : find a way to save the habit (Realm ?)
+        }
+    }
 
+    private boolean isFormValid() {
+        boolean isFormValid = true;
+        isFormValid &= validateEmptyEditText(nameInput);
+        isFormValid &= validateEmptyEditText(startDateInput);
+        if (habitTypeSpinner.getSelectedItemId() == CUSTOM_POSITION) {
+            isFormValid &= validateEmptyEditText(repetitionInput);
+        }
+        return isFormValid;
+    }
+
+    private boolean validateEmptyEditText(EditText editText) {
+        editText.setError(null);
+        if (TextUtils.isEmpty(editText.getText().toString().trim())) {
+            editText.setError("This field can't be empty");
+            return false;
+        }
+        return true;
+    }
 
 
 }
