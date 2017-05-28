@@ -1,4 +1,14 @@
 <resources>
     <string name="app_name">Habits</string>
     <string name="action_settings">Settings</string>
+
+    <string name="basicHabitType">Basic (Once per day)</string>
+    <string name="customHabitType">Custom</string>
+
+    <string name="dailyHabitPeriodicity">per day</string>
+    <string name="weeklyHabitPeriodicity">per week</string>
+    <string name="monthlyHabitPeriodicity">per month</string>
+
+
+
 </resources>

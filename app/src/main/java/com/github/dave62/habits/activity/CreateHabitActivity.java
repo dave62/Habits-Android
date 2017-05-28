@@ -87,8 +87,8 @@ public class CreateHabitActivity extends AppCompatActivity {
     }
 
     private void initializeTypesSpinner() {
-        ArrayAdapter<CharSequence> adapter = ArrayAdapter.createFromResource(this,
-                R.array.habit_type_spinner, android.R.layout.simple_spinner_item);
+        ArrayAdapter<HabitType> adapter = new ArrayAdapter<HabitType>(this,
+                android.R.layout.simple_spinner_item, HabitType.values());
         adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
         habitTypeSpinner.setAdapter(adapter);
 
@@ -126,8 +126,8 @@ public class CreateHabitActivity extends AppCompatActivity {
     }
 
     private void initializePeriodicitiesSpinner() {
-        ArrayAdapter<CharSequence> adapter = ArrayAdapter.createFromResource(this,
-                R.array.periodicity_spinner, android.R.layout.simple_spinner_item);
+        ArrayAdapter<HabitPeriodicity> adapter = new ArrayAdapter<HabitPeriodicity>(this,
+                android.R.layout.simple_spinner_item, HabitPeriodicity.getSpinnerValues());
         adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
         periodicitySpinner.setAdapter(adapter);
     }
