@@ -2,11 +2,23 @@ package com.github.dave62.habits.model;
 
 import java.util.Date;
 
-public class Habit {
+import io.realm.RealmList;
+import io.realm.RealmObject;
+import io.realm.annotations.PrimaryKey;
+
+public class Habit extends RealmObject {
+
+    @PrimaryKey
+    private String id;
 
     private String name;
     private Date startingDate;
     private int timeThresholdInMin;
+    private RealmList<DayRecord> records;
+
+    public String getId() {
+        return id;
+    }
 
     public String getName() {
         return name;
@@ -32,4 +44,11 @@ public class Habit {
         this.timeThresholdInMin = timeThresholdInMin;
     }
 
+    public RealmList<DayRecord> getRecords() {
+        return records;
+    }
+
+    public void setRecords(RealmList<DayRecord> records) {
+        this.records = records;
+    }
 }

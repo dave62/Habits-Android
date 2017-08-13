@@ -19,12 +19,17 @@ import org.androidannotations.annotations.ViewById;
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
 import java.util.Locale;
+import java.util.UUID;
+
+import io.realm.Realm;
 
 @EActivity(R.layout.activity_create_habit)
 public class CreateHabitActivity extends AppCompatActivity {
 
     //TODO : Think about internationalization
     private final static SimpleDateFormat DATE_FORMAT = new SimpleDateFormat("MM/dd/yy", Locale.US);
+
+    private Realm realm;
 
     @ViewById
     protected EditText nameInput;
@@ -40,6 +45,7 @@ public class CreateHabitActivity extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        realm = Realm.getDefaultInstance();
     }
 
     @AfterViews
@@ -72,11 +78,16 @@ public class CreateHabitActivity extends AppCompatActivity {
     @Click(R.id.saveBtn)
     protected void saveHabit() {
         if (isFormValid()) {
-            Habit habit = new Habit();
-            habit.setName(nameInput.getText().toString().trim());
-            habit.setStartingDate(calendar.getTime());
-            habit.setTimeThresholdInMin(Integer.parseInt(timeThresholdInput.getText().toString()));
-            //TODO : find a way to save the habit (Realm ?)
+            realm.executeTransactionAsync(new Realm.Transaction() {
+                @Override
+                public void execute(Realm bgRealm) {
+                    Habit habit = bgRealm.createObject(Habit.class, UUID.randomUUID().toString());
+                    habit.setName(nameInput.getText().toString().trim());
+                    habit.setStartingDate(calendar.getTime());
+                    habit.setTimeThresholdInMin(Integer.parseInt(timeThresholdInput.getText().toString()));
+                }
+            });
+            HabitsListActivity_.intent(this).start();
         }
     }
 
