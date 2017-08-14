@@ -9,6 +9,7 @@ import android.widget.DatePicker;
 import android.widget.EditText;
 
 import com.github.dave62.habits.R;
+import com.github.dave62.habits.constants.Constants;
 import com.github.dave62.habits.model.Habit;
 
 import org.androidannotations.annotations.AfterViews;
@@ -16,18 +17,13 @@ import org.androidannotations.annotations.Click;
 import org.androidannotations.annotations.EActivity;
 import org.androidannotations.annotations.ViewById;
 
-import java.text.SimpleDateFormat;
 import java.util.Calendar;
-import java.util.Locale;
 import java.util.UUID;
 
 import io.realm.Realm;
 
 @EActivity(R.layout.activity_create_habit)
 public class CreateHabitActivity extends AppCompatActivity {
-
-    //TODO : Think about internationalization
-    private final static SimpleDateFormat DATE_FORMAT = new SimpleDateFormat("MM/dd/yy", Locale.US);
 
     private Realm realm;
 
@@ -60,7 +56,7 @@ public class CreateHabitActivity extends AppCompatActivity {
                 calendar.set(Calendar.YEAR, year);
                 calendar.set(Calendar.MONTH, monthOfYear);
                 calendar.set(Calendar.DAY_OF_MONTH, dayOfMonth);
-                startDateInput.setText(DATE_FORMAT.format(calendar.getTime()));
+                startDateInput.setText(Constants.DATE_FORMAT.format(calendar.getTime()));
             }
         };
 
