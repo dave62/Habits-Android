@@ -1,12 +1,13 @@
 package com.github.dave62.habits.model;
 
+import java.io.Serializable;
 import java.util.Date;
 
 import io.realm.RealmList;
 import io.realm.RealmObject;
 import io.realm.annotations.PrimaryKey;
 
-public class Habit extends RealmObject {
+public class Habit extends RealmObject implements Serializable {
 
     @PrimaryKey
     private String id;

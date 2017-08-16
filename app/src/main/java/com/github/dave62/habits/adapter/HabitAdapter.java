@@ -8,6 +8,7 @@ import android.view.ViewGroup;
 import android.widget.TextView;
 
 import com.github.dave62.habits.R;
+import com.github.dave62.habits.activity.DayRecordActivity_;
 import com.github.dave62.habits.constants.Constants;
 import com.github.dave62.habits.model.Habit;
 
@@ -38,9 +39,15 @@ public class HabitAdapter extends RealmRecyclerViewAdapter<Habit, HabitAdapter.V
     }
 
     @Override
-    public void onBindViewHolder(ViewHolder view, int position) {
-        Habit habit = getData().get(position);
-        view.name.setText(habit.getName());
-        view.startingDate.setText("Started : " + Constants.DATE_FORMAT.format(habit.getStartingDate()));
+    public void onBindViewHolder(ViewHolder viewHolder, int position) {
+        final Habit habit = getData().get(position);
+        viewHolder.name.setText(habit.getName());
+        viewHolder.startingDate.setText("Started : " + Constants.DATE_FORMAT.format(habit.getStartingDate()));
+        viewHolder.itemView.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                DayRecordActivity_.intent(v.getContext()).currentHabitId(habit.getId()).start();
+            }
+        });
     }
 }

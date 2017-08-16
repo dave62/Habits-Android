@@ -88,8 +88,7 @@ public class CreateHabitActivity extends AppCompatActivity {
     }
 
     private boolean isFormValid() {
-        boolean isFormValid = true;
-        isFormValid &= validateEmptyEditText(nameInput);
+        boolean isFormValid = validateEmptyEditText(nameInput);
         isFormValid &= validateEmptyEditText(startDateInput);
         isFormValid &= validateEmptyEditText(timeThresholdInput);
         return isFormValid;

@@ -27,18 +27,12 @@ public class HabitsListActivity extends AppCompatActivity {
 
     @ViewById(R.id.toolbar)
     protected Toolbar toolbar;
-
     @ViewById(R.id.fab)
     protected FloatingActionButton fab;
-
     @ViewById(R.id.recyclerView)
     protected RecyclerView recyclerView;
 
-    private RecyclerView.Adapter mAdapter;
-    private RecyclerView.LayoutManager mLayoutManager;
-
     private Realm realm;
-
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
