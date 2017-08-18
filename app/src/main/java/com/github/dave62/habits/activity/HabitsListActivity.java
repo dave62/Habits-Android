@@ -11,6 +11,7 @@ import android.view.MenuItem;
 
 import com.github.dave62.habits.R;
 import com.github.dave62.habits.adapter.HabitAdapter;
+import com.github.dave62.habits.dialog.CreateHabitDialog_;
 import com.github.dave62.habits.model.Habit;
 
 import org.androidannotations.annotations.AfterViews;
@@ -78,6 +79,7 @@ public class HabitsListActivity extends AppCompatActivity {
 
     @Click(R.id.fab)
     void onFabClick() {
-        CreateHabitActivity_.intent(this).start();
+        CreateHabitDialog_ form = new CreateHabitDialog_();
+        form.show(getFragmentManager(), "Form");
     }
 }

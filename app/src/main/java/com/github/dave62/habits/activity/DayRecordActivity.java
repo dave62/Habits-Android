@@ -43,7 +43,6 @@ public class DayRecordActivity extends AppCompatActivity {
         //TODO : Handle async request ?
         currentHabit = realm.where(Habit.class).equalTo("id", currentHabitId).findFirst();
         calendarView.setMinDate(currentHabit.getStartingDate().getTime());
-        calendarView.set
     }
 
     private void initializeTabs() {

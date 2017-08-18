@@ -1,10 +1,16 @@
-package com.github.dave62.habits.activity;
+package com.github.dave62.habits.dialog;
 
+import android.app.AlertDialog;
 import android.app.DatePickerDialog;
+import android.app.Dialog;
+import android.app.DialogFragment;
+import android.content.DialogInterface;
 import android.os.Bundle;
-import android.support.v7.app.AppCompatActivity;
+import android.support.annotation.Nullable;
 import android.text.TextUtils;
+import android.view.LayoutInflater;
 import android.view.View;
+import android.view.ViewGroup;
 import android.widget.DatePicker;
 import android.widget.EditText;
 
@@ -13,8 +19,7 @@ import com.github.dave62.habits.constants.Constants;
 import com.github.dave62.habits.model.Habit;
 
 import org.androidannotations.annotations.AfterViews;
-import org.androidannotations.annotations.Click;
-import org.androidannotations.annotations.EActivity;
+import org.androidannotations.annotations.EFragment;
 import org.androidannotations.annotations.ViewById;
 
 import java.util.Calendar;
@@ -22,9 +27,10 @@ import java.util.UUID;
 
 import io.realm.Realm;
 
-@EActivity(R.layout.activity_create_habit)
-public class CreateHabitActivity extends AppCompatActivity {
+@EFragment
+public class CreateHabitDialog extends DialogFragment {
 
+    private View view;
     private Realm realm;
 
     @ViewById
@@ -34,14 +40,35 @@ public class CreateHabitActivity extends AppCompatActivity {
     @ViewById
     protected EditText timeThresholdInput;
 
-
     protected Calendar calendar = Calendar.getInstance();
 
-
     @Override
-    protected void onCreate(Bundle savedInstanceState) {
+    public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         realm = Realm.getDefaultInstance();
+    }
+
+    @Override
+    public Dialog onCreateDialog(Bundle savedInstanceState) {
+        AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
+        LayoutInflater inflater = getActivity().getLayoutInflater();
+        view = inflater.inflate(R.layout.dialog_create_habit, null);
+
+
+        builder.setTitle("Create your habit")
+                .setView(view)
+                .setPositiveButton("Save", new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialog, int id) {
+                        saveHabit();
+                    }
+                })
+                .setNegativeButton("Cancel", new DialogInterface.OnClickListener() {
+                    public void onClick(DialogInterface dialog, int id) {
+                        CreateHabitDialog.this.getDialog().cancel();
+                    }
+                });
+        return builder.create();
     }
 
     @AfterViews
@@ -57,21 +84,20 @@ public class CreateHabitActivity extends AppCompatActivity {
                 calendar.set(Calendar.MONTH, monthOfYear);
                 calendar.set(Calendar.DAY_OF_MONTH, dayOfMonth);
                 startDateInput.setText(Constants.DATE_FORMAT.format(calendar.getTime()));
+                timeThresholdInput.requestFocus();
             }
         };
 
         startDateInput.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                new DatePickerDialog(CreateHabitActivity.this, onDateSetListener, calendar
+                new DatePickerDialog(CreateHabitDialog.this.getActivity(), onDateSetListener, calendar
                         .get(Calendar.YEAR), calendar.get(Calendar.MONTH),
                         calendar.get(Calendar.DAY_OF_MONTH)).show();
             }
         });
     }
 
-
-    @Click(R.id.saveBtn)
     protected void saveHabit() {
         if (isFormValid()) {
             realm.executeTransactionAsync(new Realm.Transaction() {
@@ -83,7 +109,7 @@ public class CreateHabitActivity extends AppCompatActivity {
                     habit.setTimeThresholdInMin(Integer.parseInt(timeThresholdInput.getText().toString()));
                 }
             });
-            HabitsListActivity_.intent(this).start();
+            CreateHabitDialog.this.getDialog().cancel();
         }
     }
 
@@ -103,5 +129,9 @@ public class CreateHabitActivity extends AppCompatActivity {
         return true;
     }
 
-
+    @Nullable
+    @Override
+    public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
+        return view;
+    }
 }
