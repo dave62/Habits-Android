@@ -13,6 +13,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.DatePicker;
 import android.widget.EditText;
+import android.widget.Toast;
 
 import com.github.dave62.habits.R;
 import com.github.dave62.habits.constants.Constants;
@@ -48,7 +49,9 @@ public class CreateHabitDialog extends DialogFragment {
         realm = Realm.getDefaultInstance();
     }
 
+
     @Override
+
     public Dialog onCreateDialog(Bundle savedInstanceState) {
         AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
         LayoutInflater inflater = getActivity().getLayoutInflater();
@@ -110,6 +113,8 @@ public class CreateHabitDialog extends DialogFragment {
                 }
             });
             CreateHabitDialog.this.getDialog().cancel();
+        } else {
+            Toast.makeText(getActivity(), "Error", Toast.LENGTH_LONG).show();
         }
     }
 
