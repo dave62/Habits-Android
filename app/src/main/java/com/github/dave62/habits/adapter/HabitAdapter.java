@@ -1,5 +1,11 @@
 package com.github.dave62.habits.adapter;
 
+import android.app.Activity;
+import android.app.DialogFragment;
+import android.app.Fragment;
+import android.app.FragmentManager;
+import android.app.FragmentTransaction;
+import android.content.Context;
 import android.support.annotation.Nullable;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
@@ -10,6 +16,7 @@ import android.widget.TextView;
 import com.github.dave62.habits.R;
 import com.github.dave62.habits.activity.DayRecordActivity_;
 import com.github.dave62.habits.constants.Constants;
+import com.github.dave62.habits.dialog.DeleteHabitDialog_;
 import com.github.dave62.habits.model.Habit;
 
 import io.realm.OrderedRealmCollection;
@@ -49,5 +56,25 @@ public class HabitAdapter extends RealmRecyclerViewAdapter<Habit, HabitAdapter.V
                 DayRecordActivity_.intent(v.getContext()).currentHabitId(habit.getId()).start();
             }
         });
+        viewHolder.itemView.setOnLongClickListener(new View.OnLongClickListener() {
+            @Override
+            public boolean onLongClick(View v) {
+                deletePreviousInstanceAndShowDialog(v.getContext(), habit.getId());
+                return true;
+            }
+        });
+    }
+
+    private void deletePreviousInstanceAndShowDialog(Context context, String habitId) {
+        //TODO : find a more elegant way to get the fragment manager ?
+        FragmentManager manager = ((Activity) context).getFragmentManager();
+        FragmentTransaction transaction = manager.beginTransaction();
+        Fragment previousInstance = manager.findFragmentByTag("dialog");
+        if (previousInstance != null) {
+            transaction.remove(previousInstance);
+        }
+        transaction.addToBackStack(null);
+        DialogFragment newFragment = DeleteHabitDialog_.newInstance(habitId);
+        newFragment.show(transaction, "dialog");
     }
 }
