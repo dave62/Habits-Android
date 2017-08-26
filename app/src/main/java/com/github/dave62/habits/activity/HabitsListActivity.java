@@ -79,7 +79,7 @@ public class HabitsListActivity extends AppCompatActivity {
 
     @Click(R.id.fab)
     void onFabClick() {
-        CreateHabitDialog_ form = new CreateHabitDialog_();
-        form.show(getFragmentManager(), "Form");
+        CreateHabitDialog_ createHabitDialog = new CreateHabitDialog_();
+        createHabitDialog.show(getFragmentManager(), "createHabitDialog");
     }
 }

@@ -69,12 +69,12 @@ public class HabitAdapter extends RealmRecyclerViewAdapter<Habit, HabitAdapter.V
         //TODO : find a more elegant way to get the fragment manager ?
         FragmentManager manager = ((Activity) context).getFragmentManager();
         FragmentTransaction transaction = manager.beginTransaction();
-        Fragment previousInstance = manager.findFragmentByTag("dialog");
+        Fragment previousInstance = manager.findFragmentByTag("deleteHabitDialog");
         if (previousInstance != null) {
             transaction.remove(previousInstance);
         }
         transaction.addToBackStack(null);
         DialogFragment newFragment = DeleteHabitDialog_.newInstance(habitId);
-        newFragment.show(transaction, "dialog");
+        newFragment.show(transaction, "deleteHabitDialog");
     }
 }

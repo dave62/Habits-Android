@@ -15,7 +15,7 @@ public class Habit extends RealmObject implements Serializable {
     private String name;
     private Date startingDate;
     private int timeThresholdInMin;
-    private RealmList<DayRecord> records;
+    private RealmList<DayRecord> records = new RealmList<>();
 
     public String getId() {
         return id;

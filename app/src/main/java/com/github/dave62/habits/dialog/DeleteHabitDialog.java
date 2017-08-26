@@ -19,11 +19,11 @@ public class DeleteHabitDialog extends DialogFragment {
     private Habit habit;
 
     public static DeleteHabitDialog newInstance(String habitId) {
-        DeleteHabitDialog f = new DeleteHabitDialog();
+        DeleteHabitDialog instance = new DeleteHabitDialog();
         Bundle args = new Bundle();
         args.putString("habitId", habitId);
-        f.setArguments(args);
-        return f;
+        instance.setArguments(args);
+        return instance;
     }
 
     @Override

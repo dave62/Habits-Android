@@ -3,6 +3,8 @@ package com.github.dave62.habits.model;
 import java.util.Date;
 
 import io.realm.RealmObject;
+import io.realm.RealmResults;
+import io.realm.annotations.LinkingObjects;
 import io.realm.annotations.PrimaryKey;
 
 public class DayRecord extends RealmObject {
@@ -11,6 +13,8 @@ public class DayRecord extends RealmObject {
     private String id;
     private Date dayOfRecord;
     private int timeSpentInMin;
+    @LinkingObjects("records")
+    private final RealmResults<Habit> habit = null;
 
     public String getId() {
         return id;
