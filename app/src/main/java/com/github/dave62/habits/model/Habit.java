@@ -5,14 +5,15 @@ import java.util.Date;
 
 import io.realm.RealmList;
 import io.realm.RealmObject;
+import io.realm.annotations.Index;
 import io.realm.annotations.PrimaryKey;
 
 public class Habit extends RealmObject implements Serializable {
 
     @PrimaryKey
     private String id;
-
     private String name;
+    @Index
     private Date startingDate;
     private int timeThresholdInMin;
     private RealmList<DayRecord> records = new RealmList<>();

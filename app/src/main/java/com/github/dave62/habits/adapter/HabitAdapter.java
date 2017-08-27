@@ -60,13 +60,13 @@ public class HabitAdapter extends RealmRecyclerViewAdapter<Habit, HabitAdapter.V
         viewHolder.itemView.setOnLongClickListener(new View.OnLongClickListener() {
             @Override
             public boolean onLongClick(View v) {
-                deletePreviousInstanceAndShowDialog(v.getContext(), habit.getId());
+                cleanFragmentTransactionAndShowDialog(v.getContext(), habit.getId());
                 return true;
             }
         });
     }
 
-    private void deletePreviousInstanceAndShowDialog(Context context, String habitId) {
+    private void cleanFragmentTransactionAndShowDialog(Context context, String habitId) {
         //TODO : find a more elegant way to get the fragment manager ?
         FragmentManager manager = ((Activity) context).getFragmentManager();
         FragmentTransaction transaction = manager.beginTransaction();
@@ -75,7 +75,7 @@ public class HabitAdapter extends RealmRecyclerViewAdapter<Habit, HabitAdapter.V
             transaction.remove(previousInstance);
         }
         transaction.addToBackStack(null);
-        DialogFragment newFragment = DeleteHabitDialog_.newInstance(habitId);
-        newFragment.show(transaction, "deleteHabitDialog");
+        DialogFragment deleteHabitDialog = DeleteHabitDialog_.newInstance(habitId);
+        deleteHabitDialog.show(transaction, "deleteHabitDialog");
     }
 }

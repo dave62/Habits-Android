@@ -46,29 +46,8 @@ public class DayRecordActivity extends AppCompatActivity {
 
     @AfterViews
     protected void afterViews() {
-
         initializeTabs();
-
-        //TODO : Handle async request ?
-        currentHabit = realm.where(Habit.class).equalTo("id", currentHabitId).findFirst();
-        calendarView.setMinDate(currentHabit.getStartingDate().getTime());
-        calendarView.setOnDateChangeListener(new CalendarView.OnDateChangeListener() {
-            @Override
-            public void onSelectedDayChange(@NonNull CalendarView view, int year, int month, int dayOfMonth) {
-                Date selectedDate = getDate(year, month, dayOfMonth);
-
-                //TODO : same code as in the habit adapter, find a way to factorize
-                FragmentManager manager = DayRecordActivity.this.getFragmentManager();
-                FragmentTransaction transaction = manager.beginTransaction();
-                Fragment previousInstance = manager.findFragmentByTag("dayRecordActivity");
-                if (previousInstance != null) {
-                    transaction.remove(previousInstance);
-                }
-                transaction.addToBackStack(null);
-                DayRecordDialog newFragment = DayRecordDialog_.newInstance(currentHabitId, selectedDate);
-                newFragment.show(transaction, "dayRecordActivity");
-            }
-        });
+        initializeCalendarView();
     }
 
     private void initializeTabs() {
@@ -85,6 +64,28 @@ public class DayRecordActivity extends AppCompatActivity {
         spec.setContent(R.id.statisticsTab);
         spec.setIndicator("Statistics");
         tabHost.addTab(spec);
+    }
+
+    private void initializeCalendarView() {
+        //TODO : Handle async request ?
+        currentHabit = realm.where(Habit.class).equalTo("id", currentHabitId).findFirst();
+        calendarView.setMinDate(currentHabit.getStartingDate().getTime());
+        calendarView.setOnDateChangeListener(new CalendarView.OnDateChangeListener() {
+            @Override
+            public void onSelectedDayChange(@NonNull CalendarView view, int year, int month, int dayOfMonth) {
+                Date selectedDate = getDate(year, month, dayOfMonth);
+                //TODO : same code as in the habit adapter, find a way to factorize ?
+                FragmentManager manager = DayRecordActivity.this.getFragmentManager();
+                FragmentTransaction transaction = manager.beginTransaction();
+                Fragment previousInstance = manager.findFragmentByTag("dayRecordActivity");
+                if (previousInstance != null) {
+                    transaction.remove(previousInstance);
+                }
+                transaction.addToBackStack(null);
+                DayRecordDialog newFragment = DayRecordDialog_.newInstance(currentHabitId, selectedDate);
+                newFragment.show(transaction, "dayRecordActivity");
+            }
+        });
     }
 
     private Date getDate(int year, int month, int dayOfMonth) {

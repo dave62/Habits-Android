@@ -56,14 +56,18 @@ public class DayRecordDialog extends DialogFragment {
         currentHabit = realm.where(Habit.class).equalTo("id", getArguments().getString("habitId")).findFirst();
         try {
             selectedDate = Constants.DATE_FORMAT_FOR_BUNDLE.parse(getArguments().getString("selectedDate"));
-            DayRecord searchExistingRecord = realm.where(DayRecord.class).equalTo("habit.id", currentHabit.getId()).equalTo("dayOfRecord", selectedDate).findFirst();
-            currentDayRecord = searchExistingRecord != null ? searchExistingRecord : null;
+            currentDayRecord = realm.where(DayRecord.class).equalTo("habit.id", currentHabit.getId()).equalTo("dayOfRecord", selectedDate).findFirst();
         } catch (ParseException e) {
             Toast.makeText(getActivity(), "Error", Toast.LENGTH_LONG).show();
             this.getDialog().cancel();
         }
     }
 
+    @Nullable
+    @Override
+    public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
+        return view;
+    }
 
     @Override
     public Dialog onCreateDialog(Bundle savedInstanceState) {
@@ -100,7 +104,6 @@ public class DayRecordDialog extends DialogFragment {
                     } else {
                         currentDayRecord.setTimeSpentInMin(Integer.parseInt(minutesInput.getText().toString()));
                     }
-
                 }
             });
             DayRecordDialog.this.getDialog().cancel();
@@ -130,9 +133,4 @@ public class DayRecordDialog extends DialogFragment {
         return true;
     }
 
-    @Nullable
-    @Override
-    public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
-        return view;
-    }
 }

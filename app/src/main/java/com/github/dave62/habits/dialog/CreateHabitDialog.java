@@ -49,13 +49,11 @@ public class CreateHabitDialog extends DialogFragment {
         realm = Realm.getDefaultInstance();
     }
 
-
     @Override
     public Dialog onCreateDialog(Bundle savedInstanceState) {
         AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
         LayoutInflater inflater = getActivity().getLayoutInflater();
         view = inflater.inflate(R.layout.dialog_create_habit, null);
-
 
         builder.setTitle("Create your habit")
                 .setView(view)
@@ -71,6 +69,12 @@ public class CreateHabitDialog extends DialogFragment {
                     }
                 });
         return builder.create();
+    }
+
+    @Nullable
+    @Override
+    public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
+        return view;
     }
 
     @AfterViews
@@ -131,11 +135,5 @@ public class CreateHabitDialog extends DialogFragment {
             return false;
         }
         return true;
-    }
-
-    @Nullable
-    @Override
-    public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
-        return view;
     }
 }

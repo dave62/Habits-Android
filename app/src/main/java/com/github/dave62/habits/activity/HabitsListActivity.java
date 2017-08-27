@@ -5,9 +5,6 @@ import android.support.design.widget.FloatingActionButton;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
-import android.support.v7.widget.Toolbar;
-import android.view.Menu;
-import android.view.MenuItem;
 
 import com.github.dave62.habits.R;
 import com.github.dave62.habits.adapter.HabitAdapter;
@@ -26,21 +23,18 @@ import io.realm.Sort;
 @EActivity(R.layout.activity_habits_list)
 public class HabitsListActivity extends AppCompatActivity {
 
-    @ViewById(R.id.toolbar)
-    protected Toolbar toolbar;
-    @ViewById(R.id.fab)
-    protected FloatingActionButton fab;
     @ViewById(R.id.recyclerView)
     protected RecyclerView recyclerView;
+    @ViewById(R.id.fab)
+    protected FloatingActionButton fab;
+
 
     private Realm realm;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setSupportActionBar(toolbar);
         realm = Realm.getDefaultInstance();
-
     }
 
     @AfterViews
@@ -53,28 +47,6 @@ public class HabitsListActivity extends AppCompatActivity {
         recyclerView.setHasFixedSize(false);
         recyclerView.setLayoutManager(new LinearLayoutManager(this));
         recyclerView.setAdapter(new HabitAdapter(habits, true, true));
-    }
-
-    @Override
-    public boolean onCreateOptionsMenu(Menu menu) {
-        // Inflate the menu; this adds items to the action bar if it is present.
-        getMenuInflater().inflate(R.menu.menu_habits_list, menu);
-        return true;
-    }
-
-    @Override
-    public boolean onOptionsItemSelected(MenuItem item) {
-        // Handle action bar item clicks here. The action bar will
-        // automatically handle clicks on the Home/Up button, so long
-        // as you specify a parent activity in AndroidManifest.xml.
-        int id = item.getItemId();
-
-        //noinspection SimplifiableIfStatement
-        if (id == R.id.action_settings) {
-            return true;
-        }
-
-        return super.onOptionsItemSelected(item);
     }
 
     @Click(R.id.fab)
