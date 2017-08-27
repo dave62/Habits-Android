@@ -16,13 +16,13 @@ import android.widget.EditText;
 import android.widget.Toast;
 
 import com.github.dave62.habits.R;
-import com.github.dave62.habits.constants.Constants;
 import com.github.dave62.habits.model.Habit;
 
 import org.androidannotations.annotations.AfterViews;
 import org.androidannotations.annotations.EFragment;
 import org.androidannotations.annotations.ViewById;
 
+import java.text.DateFormat;
 import java.util.Calendar;
 import java.util.UUID;
 
@@ -85,7 +85,7 @@ public class CreateHabitDialog extends DialogFragment {
                 calendar.set(Calendar.YEAR, year);
                 calendar.set(Calendar.MONTH, monthOfYear);
                 calendar.set(Calendar.DAY_OF_MONTH, dayOfMonth);
-                startDateInput.setText(Constants.DATE_FORMAT.format(calendar.getTime()));
+                startDateInput.setText(DateFormat.getDateInstance().format(calendar.getTime()));
                 timeThresholdInput.requestFocus();
             }
         };

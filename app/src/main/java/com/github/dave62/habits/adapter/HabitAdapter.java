@@ -15,9 +15,10 @@ import android.widget.TextView;
 
 import com.github.dave62.habits.R;
 import com.github.dave62.habits.activity.DayRecordActivity_;
-import com.github.dave62.habits.constants.Constants;
 import com.github.dave62.habits.dialog.DeleteHabitDialog_;
 import com.github.dave62.habits.model.Habit;
+
+import java.text.DateFormat;
 
 import io.realm.OrderedRealmCollection;
 import io.realm.RealmRecyclerViewAdapter;
@@ -49,7 +50,7 @@ public class HabitAdapter extends RealmRecyclerViewAdapter<Habit, HabitAdapter.V
     public void onBindViewHolder(ViewHolder viewHolder, int position) {
         final Habit habit = getData().get(position);
         viewHolder.name.setText(habit.getName());
-        viewHolder.startingDate.setText("Started : " + Constants.DATE_FORMAT.format(habit.getStartingDate()));
+        viewHolder.startingDate.setText("Started : " + DateFormat.getDateInstance().format(habit.getStartingDate()));
         viewHolder.itemView.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {

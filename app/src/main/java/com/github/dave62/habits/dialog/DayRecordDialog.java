@@ -45,7 +45,7 @@ public class DayRecordDialog extends DialogFragment {
         Bundle args = new Bundle();
         args.putString("habitId", habitId);
         instance.setArguments(args);
-        args.putString("selectedDate", Constants.DATE_FORMAT.format(selectedDate));
+        args.putString("selectedDate", Constants.DATE_FORMAT_FOR_BUNDLE.format(selectedDate));
         return instance;
     }
 
@@ -55,7 +55,7 @@ public class DayRecordDialog extends DialogFragment {
         realm = Realm.getDefaultInstance();
         currentHabit = realm.where(Habit.class).equalTo("id", getArguments().getString("habitId")).findFirst();
         try {
-            selectedDate = Constants.DATE_FORMAT.parse(getArguments().getString("selectedDate"));
+            selectedDate = Constants.DATE_FORMAT_FOR_BUNDLE.parse(getArguments().getString("selectedDate"));
             DayRecord searchExistingRecord = realm.where(DayRecord.class).equalTo("habit.id", currentHabit.getId()).equalTo("dayOfRecord", selectedDate).findFirst();
             currentDayRecord = searchExistingRecord != null ? searchExistingRecord : null;
         } catch (ParseException e) {
