@@ -4,12 +4,13 @@ import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.LinearLayoutManager;
-import android.support.v7.widget.RecyclerView;
+import android.widget.TextView;
 
 import com.github.dave62.habits.R;
 import com.github.dave62.habits.adapter.HabitAdapter;
 import com.github.dave62.habits.dialog.CreateHabitDialog_;
 import com.github.dave62.habits.model.Habit;
+import com.github.dave62.habits.ui.EmptyRecyclerView;
 
 import org.androidannotations.annotations.AfterViews;
 import org.androidannotations.annotations.Click;
@@ -24,9 +25,11 @@ import io.realm.Sort;
 public class HabitsListActivity extends AppCompatActivity {
 
     @ViewById(R.id.recyclerView)
-    protected RecyclerView recyclerView;
+    protected EmptyRecyclerView recyclerView;
     @ViewById(R.id.fab)
     protected FloatingActionButton fab;
+    @ViewById(R.id.emptyListLabel)
+    protected TextView emptyListLabel;
 
 
     private Realm realm;
@@ -47,6 +50,7 @@ public class HabitsListActivity extends AppCompatActivity {
         recyclerView.setHasFixedSize(false);
         recyclerView.setLayoutManager(new LinearLayoutManager(this));
         recyclerView.setAdapter(new HabitAdapter(habits, true, true));
+        recyclerView.setEmptyView(emptyListLabel);
     }
 
     @Click(R.id.fab)
