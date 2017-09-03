@@ -11,7 +11,6 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.EditText;
-import android.widget.Toast;
 
 import com.github.dave62.habits.R;
 import com.github.dave62.habits.constants.Constants;
@@ -30,6 +29,8 @@ import io.realm.Realm;
 
 @EFragment
 public class DayRecordDialog extends DialogFragment {
+
+    //TODO : Factorize this dialog and CreateHabitDialog
 
     private View view;
     private Realm realm;
@@ -58,8 +59,7 @@ public class DayRecordDialog extends DialogFragment {
             selectedDate = Constants.DATE_FORMAT_FOR_BUNDLE.parse(getArguments().getString("selectedDate"));
             currentDayRecord = realm.where(DayRecord.class).equalTo("habit.id", currentHabit.getId()).equalTo("dayOfRecord", selectedDate).findFirst();
         } catch (ParseException e) {
-            Toast.makeText(getActivity(), "Error", Toast.LENGTH_LONG).show();
-            this.getDialog().cancel();
+            //We are sur that the date has the right format since it is ours
         }
     }
 
@@ -77,39 +77,42 @@ public class DayRecordDialog extends DialogFragment {
 
         builder.setTitle("How much time have you spent ?")
                 .setView(view)
-                .setPositiveButton("Save", new DialogInterface.OnClickListener() {
+                .setPositiveButton("Save", null) //We will override this later
+                .setNegativeButton("Cancel", null); //The cancel button is just a dismiss that android is doing by himself
+
+        //workaround to dismiss the dialog only when we want to
+        final AlertDialog dialog = builder.create();
+        dialog.setOnShowListener(new DialogInterface.OnShowListener() {
+            @Override
+            public void onShow(DialogInterface dialogInterface) {
+                dialog.getButton(AlertDialog.BUTTON_POSITIVE).setOnClickListener(new View.OnClickListener() {
                     @Override
-                    public void onClick(DialogInterface dialog, int id) {
-                        saveDayRecord();
-                    }
-                })
-                .setNegativeButton("Cancel", new DialogInterface.OnClickListener() {
-                    public void onClick(DialogInterface dialog, int id) {
-                        DayRecordDialog.this.getDialog().cancel();
+                    public void onClick(View v) {
+                        if (isFormValid()) {
+                            saveDayRecord();
+                            DayRecordDialog.this.dismiss();
+                        }
                     }
                 });
-        return builder.create();
+            }
+        });
+        return dialog;
     }
 
     protected void saveDayRecord() {
-        if (isFormValid()) {
-            realm.executeTransaction(new Realm.Transaction() {
-                @Override
-                public void execute(Realm bgRealm) {
-                    if (currentDayRecord == null) {
-                        DayRecord dayRecord = bgRealm.createObject(DayRecord.class, UUID.randomUUID().toString());
-                        dayRecord.setDayOfRecord(selectedDate);
-                        dayRecord.setTimeSpentInMin(Integer.parseInt(minutesInput.getText().toString()));
-                        currentHabit.getRecords().add(dayRecord);
-                    } else {
-                        currentDayRecord.setTimeSpentInMin(Integer.parseInt(minutesInput.getText().toString()));
-                    }
+        realm.executeTransaction(new Realm.Transaction() {
+            @Override
+            public void execute(Realm bgRealm) {
+                if (currentDayRecord == null) {
+                    DayRecord dayRecord = bgRealm.createObject(DayRecord.class, UUID.randomUUID().toString());
+                    dayRecord.setDayOfRecord(selectedDate);
+                    dayRecord.setTimeSpentInMin(Integer.parseInt(minutesInput.getText().toString()));
+                    currentHabit.getRecords().add(dayRecord);
+                } else {
+                    currentDayRecord.setTimeSpentInMin(Integer.parseInt(minutesInput.getText().toString()));
                 }
-            });
-            DayRecordDialog.this.getDialog().cancel();
-        } else {
-            Toast.makeText(getActivity(), "Error", Toast.LENGTH_LONG).show();
-        }
+            }
+        });
     }
 
     @AfterViews
