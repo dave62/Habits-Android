@@ -49,7 +49,7 @@ public class HabitsListActivity extends AppCompatActivity {
         RealmResults<Habit> habits = realm.where(Habit.class).findAllSorted("startingDate", Sort.DESCENDING);
         recyclerView.setHasFixedSize(false);
         recyclerView.setLayoutManager(new LinearLayoutManager(this));
-        recyclerView.setAdapter(new HabitAdapter(habits, true, true));
+        recyclerView.setAdapter(new HabitAdapter(this, habits, true, true));
         recyclerView.setEmptyView(emptyListLabel);
     }
 

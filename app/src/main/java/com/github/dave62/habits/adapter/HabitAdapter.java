@@ -25,6 +25,8 @@ import io.realm.RealmRecyclerViewAdapter;
 
 public class HabitAdapter extends RealmRecyclerViewAdapter<Habit, HabitAdapter.ViewHolder> {
 
+    Context context;
+
     static class ViewHolder extends RecyclerView.ViewHolder {
         private TextView name;
         private TextView startingDate;
@@ -36,8 +38,9 @@ public class HabitAdapter extends RealmRecyclerViewAdapter<Habit, HabitAdapter.V
         }
     }
 
-    public HabitAdapter(@Nullable OrderedRealmCollection<Habit> data, boolean autoUpdate, boolean updateOnModification) {
+    public HabitAdapter(Context context, @Nullable OrderedRealmCollection<Habit> data, boolean autoUpdate, boolean updateOnModification) {
         super(data, autoUpdate, updateOnModification);
+        this.context = context;
     }
 
     @Override
@@ -50,7 +53,7 @@ public class HabitAdapter extends RealmRecyclerViewAdapter<Habit, HabitAdapter.V
     public void onBindViewHolder(ViewHolder viewHolder, int position) {
         final Habit habit = getData().get(position);
         viewHolder.name.setText(habit.getName());
-        viewHolder.startingDate.setText("Started : " + DateFormat.getDateInstance().format(habit.getStartingDate()));
+        viewHolder.startingDate.setText(context.getString(R.string.started, DateFormat.getDateInstance().format(habit.getStartingDate())));
         viewHolder.itemView.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {

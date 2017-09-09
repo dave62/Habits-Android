@@ -56,13 +56,13 @@ public class DayRecordActivity extends AppCompatActivity {
         //Calendar Tab
         TabHost.TabSpec spec = tabHost.newTabSpec("Calendar");
         spec.setContent(R.id.calendarTab);
-        spec.setIndicator("Calendar");
+        spec.setIndicator(getString(R.string.calendar));
         tabHost.addTab(spec);
 
         //Statistics Tab
         spec = tabHost.newTabSpec("Stats");
         spec.setContent(R.id.statisticsTab);
-        spec.setIndicator("Statistics");
+        spec.setIndicator(getString(R.string.statistics));
         tabHost.addTab(spec);
     }
 

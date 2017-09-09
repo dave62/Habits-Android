@@ -75,10 +75,10 @@ public class DayRecordDialog extends DialogFragment {
         LayoutInflater inflater = getActivity().getLayoutInflater();
         view = inflater.inflate(R.layout.dialog_create_day_record, null);
 
-        builder.setTitle("How much time have you spent ?")
+        builder.setTitle(R.string.time_spent)
                 .setView(view)
-                .setPositiveButton("Save", null) //We will override this later
-                .setNegativeButton("Cancel", null); //The cancel button is just a dismiss that android is doing by himself
+                .setPositiveButton(R.string.save, null) //We will override this later
+                .setNegativeButton(R.string.cancel, null); //The cancel button is just a dismiss that android is doing by himself
 
         //workaround to dismiss the dialog only when we want to
         final AlertDialog dialog = builder.create();
@@ -130,7 +130,7 @@ public class DayRecordDialog extends DialogFragment {
     private boolean validateEmptyEditText(EditText editText) {
         editText.setError(null);
         if (TextUtils.isEmpty(editText.getText().toString().trim())) {
-            editText.setError("This field can't be empty");
+            editText.setError(getString(R.string.empry_field_validation));
             return false;
         }
         return true;

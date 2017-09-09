@@ -6,6 +6,7 @@ import android.app.DialogFragment;
 import android.content.DialogInterface;
 import android.os.Bundle;
 
+import com.github.dave62.habits.R;
 import com.github.dave62.habits.model.Habit;
 
 import org.androidannotations.annotations.EFragment;
@@ -37,10 +38,10 @@ public class DeleteHabitDialog extends DialogFragment {
     public Dialog onCreateDialog(Bundle savedInstanceState) {
         AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
 
-        builder.setTitle("Deletion")
-                .setMessage("Do you want to delete this habit ? \n" +
+        builder.setTitle(R.string.deletion)
+                .setMessage(getString(R.string.confirm_delete_habit) +
                         "(" + habit.getName() + ")")
-                .setPositiveButton("Delete", new DialogInterface.OnClickListener() {
+                .setPositiveButton(R.string.delete, new DialogInterface.OnClickListener() {
                     @Override
                     public void onClick(DialogInterface dialog, int id) {
                         realm.executeTransaction(new Realm.Transaction() {
@@ -51,7 +52,7 @@ public class DeleteHabitDialog extends DialogFragment {
                         });
                     }
                 })
-                .setNegativeButton("Cancel", new DialogInterface.OnClickListener() {
+                .setNegativeButton(R.string.cancel, new DialogInterface.OnClickListener() {
                     public void onClick(DialogInterface dialog, int id) {
                         DeleteHabitDialog.this.getDialog().cancel();
                     }
