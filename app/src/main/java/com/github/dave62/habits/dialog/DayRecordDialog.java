@@ -13,6 +13,7 @@ import android.view.ViewGroup;
 import android.widget.EditText;
 
 import com.github.dave62.habits.R;
+import com.github.dave62.habits.activity.DayRecordActivity;
 import com.github.dave62.habits.constants.Constants;
 import com.github.dave62.habits.model.DayRecord;
 import com.github.dave62.habits.model.Habit;
@@ -90,6 +91,8 @@ public class DayRecordDialog extends DialogFragment {
                     public void onClick(View v) {
                         if (isFormValid()) {
                             saveDayRecord();
+                            //This fragment is only used in a DayRecordActivity. Bit ugly
+                            ((DayRecordActivity) getActivity()).redrawCalendarMarkers();
                             DayRecordDialog.this.dismiss();
                         }
                     }

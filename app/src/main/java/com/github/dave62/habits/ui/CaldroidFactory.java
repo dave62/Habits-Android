@@ -34,6 +34,12 @@ public class CaldroidFactory {
         caldroidFragment.setMinDate(currentHabit.getStartingDate());
         caldroidFragment.setMaxDate(new Date());
 
+        createAndAddClickListener(parentActivity, currentHabit, caldroidFragment);
+
+        return caldroidFragment;
+    }
+
+    private static void createAndAddClickListener(final Activity parentActivity, final Habit currentHabit, CaldroidFragment caldroidFragment) {
         final CaldroidListener listener = new CaldroidListener() {
             @Override
             public void onSelectDate(Date selectedDate, View view) {
@@ -51,8 +57,7 @@ public class CaldroidFactory {
             }
         };
         caldroidFragment.setCaldroidListener(listener);
-
-        return caldroidFragment;
     }
+
 
 }
