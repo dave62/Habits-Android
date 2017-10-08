@@ -8,11 +8,14 @@ import android.content.DialogInterface;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.text.TextUtils;
+import android.view.KeyEvent;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.inputmethod.EditorInfo;
 import android.widget.DatePicker;
 import android.widget.EditText;
+import android.widget.TextView;
 
 import com.github.dave62.habits.R;
 import com.github.dave62.habits.model.Habit;
@@ -67,15 +70,19 @@ public class CreateHabitDialog extends DialogFragment {
                 dialog.getButton(AlertDialog.BUTTON_POSITIVE).setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {
-                        if (isFormValid()) {
-                            saveHabit();
-                            CreateHabitDialog.this.dismiss();
-                        }
+                        submitForm();
                     }
                 });
             }
         });
         return dialog;
+    }
+
+    private void submitForm() {
+        if (isFormValid()) {
+            saveHabit();
+            CreateHabitDialog.this.dismiss();
+        }
     }
 
     @Nullable
@@ -87,6 +94,7 @@ public class CreateHabitDialog extends DialogFragment {
     @AfterViews
     protected void afterViews() {
         initializeDatePicker();
+        initInputToSubmitFormWithKeyboard();
     }
 
     private void initializeDatePicker() {
@@ -107,6 +115,20 @@ public class CreateHabitDialog extends DialogFragment {
                 new DatePickerDialog(CreateHabitDialog.this.getActivity(), onDateSetListener, calendar
                         .get(Calendar.YEAR), calendar.get(Calendar.MONTH),
                         calendar.get(Calendar.DAY_OF_MONTH)).show();
+            }
+        });
+    }
+
+    private void initInputToSubmitFormWithKeyboard() {
+        timeThresholdInput.setOnEditorActionListener(new TextView.OnEditorActionListener() {
+            @Override
+            public boolean onEditorAction(TextView v, int actionId, KeyEvent event) {
+                boolean handled = false;
+                if (actionId == EditorInfo.IME_ACTION_DONE) {
+                    submitForm();
+                    handled = true;
+                }
+                return handled;
             }
         });
     }

@@ -7,10 +7,13 @@ import android.content.DialogInterface;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.text.TextUtils;
+import android.view.KeyEvent;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.inputmethod.EditorInfo;
 import android.widget.EditText;
+import android.widget.TextView;
 
 import com.github.dave62.habits.R;
 import com.github.dave62.habits.activity.DayRecordActivity;
@@ -89,17 +92,21 @@ public class DayRecordDialog extends DialogFragment {
                 dialog.getButton(AlertDialog.BUTTON_POSITIVE).setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {
-                        if (isFormValid()) {
-                            saveDayRecord();
-                            //This fragment is only used in a DayRecordActivity. Bit ugly
-                            ((DayRecordActivity) getActivity()).redrawCalendarMarkers();
-                            DayRecordDialog.this.dismiss();
-                        }
+                        submitForm();
                     }
                 });
             }
         });
         return dialog;
+    }
+
+    private void submitForm() {
+        if (isFormValid()) {
+            saveDayRecord();
+            //This fragment is only used in a DayRecordActivity. Bit ugly
+            ((DayRecordActivity) getActivity()).redrawCalendarMarkers();
+            DayRecordDialog.this.dismiss();
+        }
     }
 
     protected void saveDayRecord() {
@@ -123,6 +130,21 @@ public class DayRecordDialog extends DialogFragment {
         if (currentDayRecord != null) {
             minutesInput.setText(Integer.toString(currentDayRecord.getTimeSpentInMin()));
         }
+        initInputToSubmitFormWithKeyboard();
+    }
+
+    private void initInputToSubmitFormWithKeyboard() {
+        minutesInput.setOnEditorActionListener(new TextView.OnEditorActionListener() {
+            @Override
+            public boolean onEditorAction(TextView v, int actionId, KeyEvent event) {
+                boolean handled = false;
+                if (actionId == EditorInfo.IME_ACTION_DONE) {
+                    submitForm();
+                    handled = true;
+                }
+                return handled;
+            }
+        });
     }
 
     private boolean isFormValid() {

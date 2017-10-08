@@ -17,6 +17,7 @@
         android:ems="10"
         android:inputType="number"
         android:singleLine="true"
+        android:imeOptions="actionDone"
         android:layout_marginRight="8dp"
         app:layout_constraintRight_toRightOf="parent"
         android:layout_marginLeft="8dp"
