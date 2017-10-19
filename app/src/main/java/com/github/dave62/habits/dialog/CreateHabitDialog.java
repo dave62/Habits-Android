@@ -6,12 +6,10 @@ import android.app.Dialog;
 import android.app.DialogFragment;
 import android.content.DialogInterface;
 import android.os.Bundle;
-import android.support.annotation.Nullable;
 import android.text.TextUtils;
 import android.view.KeyEvent;
 import android.view.LayoutInflater;
 import android.view.View;
-import android.view.ViewGroup;
 import android.view.inputmethod.EditorInfo;
 import android.widget.DatePicker;
 import android.widget.EditText;
@@ -20,45 +18,34 @@ import android.widget.TextView;
 import com.github.dave62.habits.R;
 import com.github.dave62.habits.model.Habit;
 
-import org.androidannotations.annotations.AfterViews;
-import org.androidannotations.annotations.EFragment;
-import org.androidannotations.annotations.ViewById;
-
 import java.text.DateFormat;
 import java.util.Calendar;
 import java.util.UUID;
 
 import io.realm.Realm;
 
-@EFragment
 public class CreateHabitDialog extends DialogFragment {
 
-    private View view;
     private Realm realm;
-
-    @ViewById
-    protected EditText nameInput;
-    @ViewById
-    protected EditText startDateInput;
-    @ViewById
-    protected EditText timeThresholdInput;
-
-    protected Calendar calendar = Calendar.getInstance();
-
-    @Override
-    public void onCreate(Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
-        realm = Realm.getDefaultInstance();
-    }
+    private View view;
+    private EditText nameInput;
+    private EditText startDateInput;
+    private EditText timeThresholdInput;
+    private Calendar calendar = Calendar.getInstance();
 
     @Override
     public Dialog onCreateDialog(Bundle savedInstanceState) {
-        AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
+        realm = Realm.getDefaultInstance();
+
         LayoutInflater inflater = getActivity().getLayoutInflater();
         view = inflater.inflate(R.layout.dialog_create_habit, null);
+        bindViews();
+        initDatePicker();
+        initInputToSubmitFormWithKeyboard();
 
-        builder.setTitle(R.string.create_habit_title)
-                .setView(view)
+        AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
+        builder.setView(view)
+                .setTitle(R.string.create_habit_title)
                 .setPositiveButton(R.string.save, null) //We will override this later
                 .setNegativeButton(R.string.cancel, null); //The cancel button is just a dismiss that android is doing by himself
 
@@ -78,26 +65,13 @@ public class CreateHabitDialog extends DialogFragment {
         return dialog;
     }
 
-    private void submitForm() {
-        if (isFormValid()) {
-            saveHabit();
-            CreateHabitDialog.this.dismiss();
-        }
+    private void bindViews() {
+        nameInput = (EditText) view.findViewById(R.id.nameInput);
+        startDateInput = (EditText) view.findViewById(R.id.startDateInput);
+        timeThresholdInput = (EditText) view.findViewById(R.id.timeThresholdInput);
     }
 
-    @Nullable
-    @Override
-    public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
-        return view;
-    }
-
-    @AfterViews
-    protected void afterViews() {
-        initializeDatePicker();
-        initInputToSubmitFormWithKeyboard();
-    }
-
-    private void initializeDatePicker() {
+    private void initDatePicker() {
         final DatePickerDialog.OnDateSetListener onDateSetListener = new DatePickerDialog.OnDateSetListener() {
             @Override
             public void onDateSet(DatePicker view, int year, int monthOfYear, int dayOfMonth) {
@@ -133,16 +107,11 @@ public class CreateHabitDialog extends DialogFragment {
         });
     }
 
-    protected void saveHabit() {
-        realm.executeTransactionAsync(new Realm.Transaction() {
-            @Override
-            public void execute(Realm bgRealm) {
-                Habit habit = bgRealm.createObject(Habit.class, UUID.randomUUID().toString());
-                habit.setName(nameInput.getText().toString().trim());
-                habit.setStartingDate(calendar.getTime());
-                habit.setTimeThresholdInMin(Integer.parseInt(timeThresholdInput.getText().toString()));
-            }
-        });
+    private void submitForm() {
+        if (isFormValid()) {
+            saveHabit();
+            this.dismiss();
+        }
     }
 
     private boolean isFormValid() {
@@ -159,5 +128,17 @@ public class CreateHabitDialog extends DialogFragment {
             return false;
         }
         return true;
+    }
+
+    private void saveHabit() {
+        realm.executeTransactionAsync(new Realm.Transaction() {
+            @Override
+            public void execute(Realm bgRealm) {
+                Habit habit = bgRealm.createObject(Habit.class, UUID.randomUUID().toString());
+                habit.setName(nameInput.getText().toString().trim());
+                habit.setStartingDate(calendar.getTime());
+                habit.setTimeThresholdInMin(Integer.parseInt(timeThresholdInput.getText().toString()));
+            }
+        });
     }
 }

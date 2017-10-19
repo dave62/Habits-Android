@@ -8,7 +8,7 @@ import android.widget.TextView;
 
 import com.github.dave62.habits.R;
 import com.github.dave62.habits.adapter.HabitAdapter;
-import com.github.dave62.habits.dialog.CreateHabitDialog_;
+import com.github.dave62.habits.dialog.CreateHabitDialog;
 import com.github.dave62.habits.model.Habit;
 import com.github.dave62.habits.ui.EmptyRecyclerView;
 
@@ -55,7 +55,7 @@ public class HabitsListActivity extends AppCompatActivity {
 
     @Click(R.id.fab)
     void onFabClick() {
-        CreateHabitDialog_ createHabitDialog = new CreateHabitDialog_();
+        CreateHabitDialog createHabitDialog = new CreateHabitDialog();
         createHabitDialog.show(getFragmentManager(), "createHabitDialog");
     }
 }

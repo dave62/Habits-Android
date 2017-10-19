@@ -9,7 +9,6 @@ import android.view.View;
 
 import com.github.dave62.habits.R;
 import com.github.dave62.habits.dialog.DayRecordDialog;
-import com.github.dave62.habits.dialog.DayRecordDialog_;
 import com.github.dave62.habits.model.Habit;
 import com.roomorama.caldroid.CaldroidFragment;
 import com.roomorama.caldroid.CaldroidListener;
@@ -51,7 +50,7 @@ public class CaldroidFactory {
                     transaction.remove(previousInstance);
                 }
                 transaction.addToBackStack(null);
-                DayRecordDialog newFragment = DayRecordDialog_.newInstance(currentHabit.getId(), selectedDate);
+                DayRecordDialog newFragment = DayRecordDialog.newInstance(currentHabit.getId(), selectedDate);
                 newFragment.show(transaction, "dayRecordActivity");
 
             }
