@@ -79,7 +79,7 @@ public class DayRecordActivity extends AppCompatActivity {
     public void redrawCalendarMarkers() {
         HashMap<Date, Drawable> dateDrawableMap = new HashMap<>();
         for (DayRecord record : currentHabit.getRecords()) {
-            if (record.getTimeSpentInMin() > currentHabit.getTimeThresholdInMin()) {
+            if (record.getTimeSpentInMin() >= currentHabit.getTimeThresholdInMin()) {
                 dateDrawableMap.put(record.getDayOfRecord(), ContextCompat.getDrawable(this, R.drawable.success_circle));
             } else {
                 dateDrawableMap.put(record.getDayOfRecord(), ContextCompat.getDrawable(this, R.drawable.fail_circle));
